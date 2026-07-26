@@ -33,6 +33,17 @@ function App() {
   const [operatorQuery, setOperatorQuery] = useState('');
   const [aiResponse, setAiResponse] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [conversations, setConversations] = useState([]);
+  const [agentTrace, setAgentTrace] = useState([]);
+  const [systemMetrics, setSystemMetrics] = useState({ latency: "0.12s", load: "99.87%", cpu: "14%" });
+
+  // Fetch message history on mount
+  useEffect(() => {
+    fetch("http://localhost:8000/api/history")
+      .then(res => res.json())
+      .then(data => setConversations(data))
+      .catch(err => console.warn("Message history fetch issue:", err));
+  }, []);
 
   const [voiceFinished, setVoiceFinished] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -68,8 +79,8 @@ function App() {
     };
   }, []);
 
-  // Handle voice commands dynamically
-  const handleVoiceCommand = (text) => {
+  // Handle voice commands dynamically via Backend Python Supervisor API (with local fallback)
+  const handleVoiceCommand = async (text, inputType = "voice") => {
     if (!text.trim()) return;
     
     setOperatorQuery(text);
@@ -77,34 +88,71 @@ function App() {
     setIsTyping(true);
 
     let reply = "";
-    const query = text.toLowerCase();
+    let trace = [];
+    let latency = "0.12s";
+    
+    try {
+      const response = await fetch("http://localhost:8000/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ 
+          session_id: "survex_default_session",
+          input_type: inputType,
+          content: text 
+        })
+      });
 
-    // Context response router
-    if (query.includes('who are you') || query.includes('your name') || query.includes('who is this')) {
-      reply = "I am SurveX, your cognitive operating system core interface.";
-    } else if (query.includes('reactor') || query.includes('core') || query.includes('stable') || query.includes('status')) {
-      reply = "The thermonuclear core is operating at 24 million Kelvin. Magnetic fields are fully balanced at 99.87% sync load.";
-    } else if (query.includes('analyze') || query.includes('project') || query.includes('code') || query.includes('repository')) {
-      reply = "Project architecture analyzed. 1,805 modules active. The file structure is fully refactored, decoupled, and compiled with zero errors.";
-    } else if (query.includes('latency') || query.includes('ping') || query.includes('speed')) {
-      reply = "Latency is clear at 0.12 milliseconds. High-frequency neural bands are fully calibrated.";
-    } else if (query.includes('hello') || query.includes('hi') || query.includes('hey')) {
-      reply = "Hello, Surya. Systems are fully loaded and listening. What can I assist you with today?";
-    } else if (query.includes('time') || query.includes('date')) {
-      const now = new Date();
-      reply = `The local host time is currently ${now.toLocaleTimeString(undefined, {hour: '2-digit', minute: '2-digit'})} on ${now.toLocaleDateString(undefined, {weekday: 'long', month: 'long', day: 'numeric'})}.`;
-    } else {
-      reply = `Analyzing request: "${text}". Running neural query arrays. All cognitive pipelines are stable.`;
+      if (!response.ok) {
+        throw new Error("Backend response error");
+      }
+
+      const data = await response.json();
+      reply = data.text;
+      trace = data.metadata.trace || [];
+      latency = data.metadata.latency || "0.12s";
+    } catch (e) {
+      console.warn("Backend supervisor offline, utilizing local fallback rules:", e);
+      
+      const query = text.toLowerCase();
+      trace = ["local_fallback"];
+      latency = "0.08s";
+      
+      // Context response router
+      if (query.includes('who are you') || query.includes('your name') || query.includes('who is this')) {
+        reply = "I am SurveX, your cognitive operating system core interface.";
+      } else if (query.includes('reactor') || query.includes('core') || query.includes('stable') || query.includes('status')) {
+        reply = "The thermonuclear core is operating at 24 million Kelvin. Magnetic fields are fully balanced at 99.87% sync load.";
+      } else if (query.includes('analyze') || query.includes('project') || query.includes('code') || query.includes('repository')) {
+        reply = "Project architecture analyzed. 1,805 modules active. The file structure is fully refactored, decoupled, and compiled with zero errors.";
+      } else if (query.includes('latency') || query.includes('ping') || query.includes('speed')) {
+        reply = "Latency is clear at 0.12 milliseconds. High-frequency neural bands are fully calibrated.";
+      } else if (query.includes('hello') || query.includes('hi') || query.includes('hey')) {
+        reply = "Hello, Surya. Systems are fully loaded and listening. What can I assist you with today?";
+      } else if (query.includes('time') || query.includes('date')) {
+        const now = new Date();
+        reply = `The local host time is currently ${now.toLocaleTimeString(undefined, {hour: '2-digit', minute: '2-digit'})} on ${now.toLocaleDateString(undefined, {weekday: 'long', month: 'long', day: 'numeric'})}.`;
+      } else {
+        reply = `Analyzing request: "${text}". Running neural query arrays. All cognitive pipelines are stable.`;
+      }
     }
 
     // Delay response to simulate processing typewriter effect
     setTimeout(() => {
       setIsTyping(false);
       setAiResponse(reply);
+      setAgentTrace(trace);
+      setSystemMetrics(prev => ({ ...prev, latency: latency }));
+      setConversations(prev => [
+        ...prev,
+        { sender: 'operator', message: text, timestamp: new Date().toISOString() },
+        { sender: 'survex', message: reply, timestamp: new Date().toISOString() }
+      ]);
       if (!muted) {
         audioSynth.speak(reply);
       }
-    }, 1000);
+    }, 800);
   };
 
   // Handle voice wake word triggers
@@ -348,8 +396,8 @@ function App() {
           />
         )}
 
-        {/* 3D WEBGL HOLOGRAPHIC CANVAS CONTAINER */}
-        {userInteracted && (
+        {/* 3D WEBGL HOLOGRAPHIC CANVAS CONTAINER — intro phases only */}
+        {userInteracted && phase !== PHASE.DASHBOARD_ACTIVE && (
           <div className="absolute inset-0 w-full h-full z-10 pointer-events-none">
             <div ref={canvasContainerRef} className="w-full h-full pointer-events-auto" />
           </div>
@@ -369,6 +417,13 @@ function App() {
             aiResponse={aiResponse}
             isTyping={isTyping}
             micStatus={micStatus}
+            agentTrace={agentTrace}
+            conversations={conversations}
+            systemMetrics={systemMetrics}
+            muted={muted}
+            toggleMute={toggleMute}
+            onSubmitText={(txt) => handleVoiceCommand(txt, "text")}
+            onSubmitVoice={(txt) => handleVoiceCommand(txt, "voice")}
           />
         )}
 
