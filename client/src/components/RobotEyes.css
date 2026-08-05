@@ -1,0 +1,109 @@
+/* RobotEyes.css */
+
+.eyes-row {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 0;
+}
+
+.eyes-row--blink {
+  animation: natural-blink 5s ease-in-out infinite;
+  animation-delay: 2s;
+}
+
+@keyframes natural-blink {
+  0%, 90%, 100% { transform: scaleY(1); }
+  95% { transform: scaleY(0.05); }
+}
+
+/* ── Eye socket ─────────────────────────────────────────────────── */
+.eye-socket {
+  width: 52px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(0, 212, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.eye-socket--squint {
+  height: 36px;
+  border-radius: 14px 14px 8px 8px;
+}
+
+/* ── Closed state ────────────────────────────────────────────────── */
+.eye-socket--closed {
+  height: 20px;
+  border-radius: 0 0 12px 12px;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.eye-closed-line {
+  width: 36px;
+  height: 2px;
+  border-radius: 2px;
+  opacity: 0.5;
+}
+
+/* ── Eye lens ────────────────────────────────────────────────────── */
+.eye-lens {
+  width: 36px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(0, 8, 20, 0.9);
+  border: 1px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: all 0.4s ease;
+}
+
+.eye-lens--up .pupil {
+  transform: translateY(-5px) !important;
+}
+
+/* ── Pupil ───────────────────────────────────────────────────────── */
+.pupil {
+  border-radius: 50%;
+  transition: all 0.4s ease;
+  position: relative;
+  z-index: 2;
+}
+
+/* ── Glint ───────────────────────────────────────────────────────── */
+.pupil-glint {
+  position: absolute;
+  top: 6px;
+  right: 7px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.7);
+  z-index: 3;
+}
+
+/* ── Scan line ───────────────────────────────────────────────────── */
+.eye-scanline {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  border-top: 1px solid;
+  animation: scan 3s linear infinite;
+  opacity: 0.3;
+}
+
+@keyframes scan {
+  0% { top: 0; opacity: 0.3; }
+  50% { opacity: 0.1; }
+  100% { top: 100%; opacity: 0.3; }
+}

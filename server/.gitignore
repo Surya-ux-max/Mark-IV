@@ -1,0 +1,22 @@
+# Server Git Ignore
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+.env
+!.env.example
+logs/
+*.log
+.pytest_cache/
+.coverage
+htmlcov/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+dist/
+build/
+*.egg-info/

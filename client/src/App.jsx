@@ -1,122 +1,190 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+/**
+ * App.jsx — Full-Body Layout for SurveX Virtual Robot (CSE Brain)
+ */
 
-function App() {
-  const [count, setCount] = useState(0)
+import { useCallback, useEffect } from 'react';
+import Background3D from './components/Background3D';
+import RobotBody from './components/RobotBody';
+import { useRobot } from './hooks/useRobot';
+import { useSpeech } from './hooks/useSpeech';
+import { useWebSocket } from './hooks/useWebSocket';
+import './index.css';
+
+const STATE_LABEL = {
+  SLEEPING:  'SLEEPING',
+  IDLE:      'STANDBY',
+  LISTENING: 'LISTENING',
+  THINKING:  'PROCESSING',
+  SPEAKING:  'SPEAKING',
+  GREETING:  'GREETING',
+  OBSERVING: 'OBSERVING',
+  ERROR:     'ERROR',
+};
+
+const STATE_COLOR = {
+  SLEEPING:  '#3a5090',
+  IDLE:      '#00e5ff',
+  LISTENING: '#5599ff',
+  THINKING:  '#ffbb00',
+  SPEAKING:  '#00ffaa',
+  GREETING:  '#cc77ff',
+  OBSERVING: '#00e5ff',
+  ERROR:     '#ff4455',
+};
+
+export default function App() {
+  const robot = useRobot();
+  const { connected, sessionId, send } = useWebSocket(robot.handleMessage);
+
+  const speech = useSpeech({
+    isRobotAwake: robot.isAwake,
+    onTranscript: (text) => {
+      robot.setTranscript(text);
+      if (text && robot.isAwake) {
+        send({ type: 'USER_MESSAGE', text, session_id: sessionId });
+        send({ type: 'USER_STOPPED_SPEAKING' });
+      }
+    },
+    onSpeakStart: () => send({ type: 'USER_STARTED_SPEAKING' }),
+    onSpeakEnd: () => {},
+  });
+
+  useEffect(() => {
+    robot.speakRef.current = (text, onDone) => {
+      speech.speak(text, () => {
+        send({ type: 'SPEAKING_DONE', session_id: sessionId });
+        onDone?.();
+      });
+    };
+  }, [speech.speak, send, sessionId]);
+
+  const handleWakeToggle = useCallback(() => {
+    if (robot.isAwake) {
+      speech.cancelSpeech();
+      send({ type: 'COMMAND', command: 'SLEEP' });
+    } else {
+      send({ type: 'COMMAND', command: 'WAKE_UP' });
+    }
+  }, [robot.isAwake, send, speech]);
+
+  const handleMic = useCallback(() => {
+    if (!robot.isAwake) return;
+    if (speech.isListening) {
+      speech.stopListening();
+    } else {
+      speech.cancelSpeech();
+      speech.startListening();
+      send({ type: 'USER_STARTED_SPEAKING', session_id: sessionId });
+    }
+  }, [robot.isAwake, speech, send, sessionId]);
+
+  const color = STATE_COLOR[robot.robotState] || STATE_COLOR.IDLE;
+  const label = STATE_LABEL[robot.robotState] || robot.robotState;
 
   return (
     <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
+      {/* 3D Holographic Stage with Floating 3D Geometries & Interactive Mouse Parallax */}
+      <Background3D robotState={robot.robotState} />
+
+      <div className="bg-grid" />
+      <div className="bg-radial" />
+
+      <main className="app">
+
+        {/* Header */}
+        <div className="app-header">
+          <div className="dept-title">Department of Computer Science &amp; Engineering</div>
+          <div className="robot-name">CSE BRAIN</div>
         </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
+
+        {/* Status Badge */}
+        <div
+          className="status-badge"
+          style={{ color, borderColor: `${color}60`, boxShadow: `0 0 24px ${color}25` }}
         >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
+          {robot.robotState === 'LISTENING' ? (
+            <div className="listen-bars">
+              {[...Array(5)].map((_, i) => (
+                <div
+                  key={i}
+                  className="listen-bar"
+                  style={{ background: color, animationDelay: `${i * 0.1}s` }}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="status-dot" style={{ background: color, boxShadow: `0 0 10px ${color}` }} />
+          )}
+          {label}
         </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
+        {/* Full-Body Robot Stage */}
+        <div className="robot-stage">
+          <RobotBody
+            robotState={robot.robotState}
+            expression={robot.expression}
+            emotion={robot.emotion}
+            animationCue={robot.animationCue}
+          />
+        </div>
+
+        {/* Response Panel */}
+        <div
+          className="response-panel"
+          style={{ borderColor: `${color}25`, boxShadow: `0 0 35px ${color}12` }}
+        >
+          <div className="response-label">CSE BRAIN SAYS</div>
+          <div className="response-text">
+            {robot.transcript
+              ? <span className="transcript-text">"{robot.transcript}"</span>
+              : robot.lastResponse}
+          </div>
+          {robot.lastSources?.length > 0 && (
+            <div className="sources-row">
+              {robot.lastSources.map((s) => (
+                <span key={s} className="source-chip">📚 {s}</span>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Controls */}
+        <div className="controls-row">
+          <div className="btn-row">
+            {robot.isAwake && (
+              <button
+                id="mic-btn"
+                className={`btn-mic ${speech.isListening ? 'listening' : ''}`}
+                onClick={handleMic}
+                title={speech.isListening ? 'Stop listening' : 'Start speaking'}
+              >
+                {speech.isListening ? '⏹' : '🎤'}
+              </button>
+            )}
+
+            <button
+              id="wake-btn"
+              className={`btn-wake ${robot.isAwake ? 'btn-wake--awake' : 'btn-wake--sleep'}`}
+              onClick={handleWakeToggle}
+              disabled={!connected}
+            >
+              <div className={`conn-dot ${connected ? 'conn-dot--on' : 'conn-dot--off'}`} />
+              {robot.isAwake ? '⏻ SLEEP' : '⏼ WAKE UP'}
+            </button>
+          </div>
+
+          <div className="hint-text">
+            {!connected
+              ? '● CONNECTING TO SERVER...'
+              : robot.isAwake
+              ? speech.isListening
+                ? '● LISTENING — SPEAK NOW'
+                : '● TAP MIC OR SPEAK TO TALK'
+              : '● TAP WAKE UP TO START'}
+          </div>
+        </div>
+
+      </main>
     </>
-  )
+  );
 }
-
-export default App

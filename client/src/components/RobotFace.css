@@ -1,0 +1,455 @@
+/* ================================================================
+   RobotFace.css — High-impact, Face-Only UI for CSE Brain
+   ================================================================ */
+
+.robot-face-root {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 360px;
+  padding: 20px 0 30px;
+  transition: opacity 0.5s ease;
+  --c: #00e5ff;
+  --g: rgba(0, 229, 255, 0.5);
+}
+
+.rf--sleep   { animation: rf-breathe 4.5s ease-in-out infinite; }
+.rf--think   { animation: rf-think 3.0s ease-in-out infinite; }
+.rf--excited { animation: rf-bounce 0.5s ease-in-out infinite alternate; }
+
+@keyframes rf-breathe {
+  0%,100% { transform: translateY(0) scale(1); }
+  50%     { transform: translateY(-7px) scale(1.01); }
+}
+@keyframes rf-think {
+  0%,100% { transform: rotate(0deg); }
+  30%     { transform: rotate(-2deg); }
+  70%     { transform: rotate(2deg); }
+}
+@keyframes rf-bounce {
+  0%   { transform: translateY(0); }
+  100% { transform: translateY(-8px); }
+}
+
+/* ── Ambient Halos ─────────────────────────────────────────── */
+.rf-halo {
+  position: absolute;
+  border-radius: 50%;
+  border: 1.5px solid var(--c);
+  pointer-events: none;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: rf-halo-pulse 4.8s ease-in-out infinite;
+  opacity: 0;
+}
+.rf-halo.h1 { width: 420px; height: 360px; }
+.rf-halo.h2 { width: 500px; height: 440px; animation-delay: 1.8s; }
+
+@keyframes rf-halo-pulse {
+  0%,100% { opacity: 0; transform: translate(-50%, -50%) scale(0.96); }
+  50%     { opacity: 0.12; transform: translate(-50%, -50%) scale(1.03); }
+}
+
+/* ── Headphone Arch Band ───────────────────────────────────── */
+.rf-band-arc {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 270px;
+  height: 64px;
+  border: 9px solid #5533aa;
+  border-bottom: none;
+  border-radius: 140px 140px 0 0;
+  z-index: 20;
+  pointer-events: none;
+  box-shadow: 0 -3px 0 rgba(255,255,255,0.08), inset 0 -2px 0 rgba(0,0,0,0.5);
+}
+
+/* ── Head Unit ─────────────────────────────────────────────── */
+.rf-head-unit {
+  position: relative;
+  display: flex;
+  align-items: center;
+  z-index: 10;
+  transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.rf-head-unit--bob { animation: rf-bob 0.5s ease-in-out infinite alternate; }
+@keyframes rf-bob {
+  0%   { transform: translateY(0); }
+  100% { transform: translateY(-6px); }
+}
+
+/* ── Headphones ────────────────────────────────────────────── */
+.face-hp {
+  display: flex;
+  align-items: center;
+  z-index: 15;
+  position: relative;
+}
+.face-hp--left  { flex-direction: row-reverse; }
+.face-hp--right { flex-direction: row; }
+
+.face-hp-cup {
+  width: 46px;
+  height: 82px;
+  border-radius: 23px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: box-shadow 0.4s ease;
+  overflow: hidden;
+}
+.face-hp--left  .face-hp-cup { border-radius: 23px 9px 9px 23px; }
+.face-hp--right .face-hp-cup { border-radius: 9px 23px 23px 9px; }
+
+.face-hp-cup::before {
+  content: '';
+  position: absolute;
+  top: 10px; left: 8px; right: 8px;
+  height: 24px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 12px;
+  pointer-events: none;
+}
+
+.face-hp-grille {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.face-hp-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1.5px solid;
+  transition: border-color 0.4s ease, box-shadow 0.4s ease;
+}
+.face-hp-ring.r1 { width: 30px; height: 30px; }
+.face-hp-ring.r2 { width: 20px; height: 20px; }
+.face-hp-ring.r3 { width: 11px; height: 11px; }
+.r3--active { animation: face-hp-ring-pulse 0.8s ease-in-out infinite; }
+@keyframes face-hp-ring-pulse {
+  0%,100% { transform: scale(1); opacity: 1; }
+  50%     { transform: scale(1.35); opacity: 0.5; }
+}
+
+.face-hp-led {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  transition: background 0.4s ease, box-shadow 0.4s ease;
+  opacity: 0.4;
+}
+.led--on { opacity: 1; animation: face-led-blink 1.2s ease-in-out infinite; }
+@keyframes face-led-blink { 0%,100% { opacity: 1; } 50% { opacity: 0.25; } }
+
+.face-hp-pad {
+  width: 12px;
+  height: 6px;
+  border-radius: 3px;
+  background: #1e1440;
+}
+
+/* ── Head Shell ────────────────────────────────────────────── */
+.rf-head-shell {
+  width: 250px;
+  height: 225px;
+  background: linear-gradient(
+    158deg,
+    #1d2644 0%,
+    #141928 42%,
+    #0d1220 78%,
+    #090d18 100%
+  );
+  border-radius: 42px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px 18px 12px;
+  gap: 8px;
+  transition: box-shadow 0.5s ease;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.rf-top-led {
+  width: 85%;
+  height: 2.5px;
+  border-radius: 2px;
+  transition: background 0.5s ease;
+}
+
+/* ── Screen Face ───────────────────────────────────────────── */
+.rf-screen {
+  width: 210px;
+  background: #040609;
+  border-radius: 26px;
+  padding: 12px 16px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  border: 1px solid rgba(0,0,0,0.95);
+  flex: 1;
+}
+
+.rf-camera {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  transition: background 0.5s ease, box-shadow 0.5s ease;
+}
+
+/* ── Eyes Row ──────────────────────────────────────────────── */
+.rf-eyes-row {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+.rf-eyes-row--blink .face-eye-oled { transform: scaleY(0.04) !important; }
+
+.face-eye-unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.face-eyebrow {
+  width: 60px;
+  height: 4px;
+  border-radius: 3px;
+  transition: transform 0.35s ease, background 0.5s ease, opacity 0.4s ease;
+  filter: blur(0.4px);
+}
+
+.face-eye-socket {
+  width: 86px;
+  height: 66px;
+  background: #020406;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: box-shadow 0.5s ease;
+  border: 1.5px solid rgba(255,255,255,0.06);
+}
+.face-eye-socket::after {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border-radius: 12px;
+  box-shadow: inset 0 4px 14px rgba(0,0,0,0.95);
+  pointer-events: none;
+}
+
+.face-eye-oled {
+  width: 74px;
+  height: 54px;
+  border-radius: 12px;
+  background: #010305;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform-origin: center 60%;
+}
+
+.face-eye-sleep {
+  width: 58px;
+  height: 2.5px;
+  border-radius: 1px;
+}
+
+.face-eye-iris {
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  transition: transform 0.4s ease, opacity 0.5s ease;
+}
+
+.face-eye-pupil {
+  position: absolute;
+  width: 22px;
+  height: 26px;
+  border-radius: 5px;
+  background: rgba(0,0,0,0.88);
+  transition: transform 0.4s ease;
+  z-index: 2;
+}
+
+.face-eye-glint-large {
+  position: absolute;
+  top: 7px;
+  right: 12px;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.92);
+  z-index: 3;
+  filter: blur(0.4px);
+}
+.face-eye-glint-small {
+  position: absolute;
+  top: 12px;
+  right: 8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.55);
+  z-index: 3;
+}
+
+.face-eye-scanline {
+  position: absolute;
+  left: 0; right: 0;
+  height: 2px;
+  z-index: 4;
+  animation: face-scan-move 1.8s linear infinite;
+}
+@keyframes face-scan-move {
+  0%   { top: 0; opacity: 0.75; }
+  90%  { opacity: 0.3; }
+  100% { top: 100%; opacity: 0; }
+}
+
+.face-eye-pixel-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+  background-size: 8px 8px;
+  border-radius: 12px;
+}
+
+/* ── Nose / Mouth / Chin ──────────────────────────────────── */
+.rf-nose { display: flex; justify-content: center; }
+.rf-nose-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  opacity: 0.55;
+  transition: background 0.5s ease, box-shadow 0.5s ease;
+}
+
+.face-mouth-area {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 38px;
+}
+
+.face-mouth-eq {
+  display: flex;
+  align-items: flex-end;
+  gap: 3.5px;
+  height: 32px;
+  padding: 0 4px;
+}
+.face-eq-bar {
+  width: 5.5px;
+  border-radius: 3px 3px 0 0;
+  animation: face-eq-anim 0.45s ease-in-out infinite alternate;
+}
+@keyframes face-eq-anim {
+  0%   { height: calc(var(--bh, 0.5) * 6px); }
+  100% { height: calc(var(--bh, 0.5) * 28px); }
+}
+
+.rf-bottom-leds {
+  display: flex;
+  gap: 5px;
+}
+.rf-bled {
+  width: 7px;
+  height: 4px;
+  border-radius: 2px;
+  transition: background 0.4s ease;
+}
+
+.rf-chin {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding-bottom: 2px;
+}
+.rf-chin-slits { display: flex; gap: 6px; }
+.rf-slit {
+  width: 16px;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255,255,255,0.04);
+}
+
+/* ── Ground Glow ───────────────────────────────────────────── */
+.rf-ground-glow {
+  width: 260px;
+  height: 30px;
+  border-radius: 50%;
+  margin-top: 10px;
+  opacity: 0.6;
+  filter: blur(10px);
+  transition: background 0.6s ease;
+}
+
+/* ── Particle Orbits ───────────────────────────────────────── */
+.rf-think-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 30;
+}
+.rf-p {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  top: 35%;
+  left: 50%;
+  animation: rf-orb 3.5s linear infinite;
+  animation-delay: calc(var(--i) * -0.29s);
+}
+@keyframes rf-orb {
+  0%   { transform: rotate(calc(var(--i) * 30deg)) translateX(165px); opacity: 0.95; }
+  50%  { opacity: 0.25; }
+  100% { transform: rotate(calc(var(--i) * 30deg + 360deg)) translateX(165px); opacity: 0.95; }
+}
+
+/* ── Speak Rings ───────────────────────────────────────────── */
+.rf-speak-rings {
+  position: absolute;
+  top: 48%;
+  left: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+.rf-sr {
+  position: absolute;
+  border-radius: 50%;
+  border: 1.5px solid;
+  width:  calc(320px + var(--i) * 70px);
+  height: calc(290px + var(--i) * 70px);
+  transform: translate(-50%, -50%);
+  animation: rf-sr-expand 2.4s ease-out infinite;
+  animation-delay: calc(var(--i) * 0.6s);
+  opacity: 0;
+  transition: border-color 0.5s ease;
+}
+@keyframes rf-sr-expand {
+  0%   { opacity: 0.45; transform: translate(-50%, -50%) scale(0.85); }
+  100% { opacity: 0;    transform: translate(-50%, -50%) scale(1.22); }
+}
