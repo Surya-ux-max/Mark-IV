@@ -1,19 +1,24 @@
 /**
- * Background3D.jsx — Clean 3D Particle Stage (No Torus Knots / Pipes)
+ * Background3D.jsx — Bright User-Lovable 3D Stage for CSE Brain
+ *
+ * Designed for light/bright backgrounds:
+ * - Soft vibrant point lights matching state colors.
+ * - Floating pastel glass-like polyhedrons & soft particle dust.
+ * - Smooth interactive camera parallax.
  */
 
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
 const STATE_COLORS = {
-  SLEEPING:  0x3a5090,
-  IDLE:      0x00e5ff,
-  LISTENING: 0x5599ff,
-  THINKING:  0xffbb00,
-  SPEAKING:  0x00ffaa,
-  GREETING:  0xcc77ff,
-  OBSERVING: 0x00e5ff,
-  ERROR:     0xff4455,
+  SLEEPING:  0x6366f1, // Soft Indigo
+  IDLE:      0x0284c7, // Sky Blue / Cyan
+  LISTENING: 0x2563eb, // Royal Blue
+  THINKING:  0xf59e0b, // Warm Amber
+  SPEAKING:  0x10b981, // Emerald Green
+  GREETING:  0xec4899, // Lovable Pink
+  OBSERVING: 0x0284c7, // Cyan
+  ERROR:     0xef4444, // Red
 };
 
 export default function Background3D({ robotState = 'IDLE' }) {
@@ -38,35 +43,35 @@ export default function Background3D({ robotState = 'IDLE' }) {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     container.appendChild(renderer.domElement);
 
-    // Lights
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+    // Lights for Bright Theme
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.85);
     scene.add(ambientLight);
 
-    const pointLight1 = new THREE.PointLight(STATE_COLORS[robotState] || 0x00e5ff, 2.5, 35);
+    const pointLight1 = new THREE.PointLight(STATE_COLORS[robotState] || 0x0284c7, 3, 40);
     pointLight1.position.set(6, 6, 8);
     scene.add(pointLight1);
 
-    const pointLight2 = new THREE.PointLight(0x7733ff, 1.8, 30);
+    const pointLight2 = new THREE.PointLight(0xa855f7, 2, 35);
     pointLight2.position.set(-6, -6, 6);
     scene.add(pointLight2);
 
-    // Subtle Floating Polyhedral Shards (No rotating torus knot / pipe rings)
+    // Floating Pastel Polyhedrons
     const floatingGroup = new THREE.Group();
     const shapes = [];
     const geoms = [
-      new THREE.IcosahedronGeometry(0.5, 0),
-      new THREE.OctahedronGeometry(0.6, 0),
-      new THREE.TetrahedronGeometry(0.4, 0),
+      new THREE.IcosahedronGeometry(0.55, 0),
+      new THREE.OctahedronGeometry(0.65, 0),
+      new THREE.TetrahedronGeometry(0.45, 0),
     ];
 
     for (let i = 0; i < 14; i++) {
       const g = geoms[i % geoms.length];
       const mat = new THREE.MeshStandardMaterial({
-        color: i % 2 === 0 ? (STATE_COLORS[robotState] || 0x00e5ff) : 0x8844ff,
-        metalness: 0.9,
+        color: i % 2 === 0 ? (STATE_COLORS[robotState] || 0x0284c7) : 0xc084fc,
+        metalness: 0.2,
         roughness: 0.1,
         transparent: true,
-        opacity: 0.35,
+        opacity: 0.3,
         wireframe: i % 2 === 0,
       });
       const mesh = new THREE.Mesh(g, mat);
@@ -94,8 +99,8 @@ export default function Background3D({ robotState = 'IDLE' }) {
     }
     scene.add(floatingGroup);
 
-    // Clean Particle Field (1,000 nodes)
-    const particleCount = 1000;
+    // Particle Dust Field
+    const particleCount = 800;
     const pPositions = new Float32Array(particleCount * 3);
 
     for (let i = 0; i < particleCount; i++) {
@@ -108,11 +113,10 @@ export default function Background3D({ robotState = 'IDLE' }) {
     pGeo.setAttribute('position', new THREE.BufferAttribute(pPositions, 3));
 
     const pMat = new THREE.PointsMaterial({
-      color: STATE_COLORS[robotState] || 0x00e5ff,
-      size: 0.08,
+      color: STATE_COLORS[robotState] || 0x0284c7,
+      size: 0.09,
       transparent: true,
-      opacity: 0.45,
-      blending: THREE.AdditiveBlending,
+      opacity: 0.35,
     });
 
     const particles = new THREE.Points(pGeo, pMat);
@@ -125,8 +129,8 @@ export default function Background3D({ robotState = 'IDLE' }) {
     let targetY = 0;
 
     const handleMouseMove = (e) => {
-      mouseX = (e.clientX - window.innerWidth / 2) * 0.0006;
-      mouseY = (e.clientY - window.innerHeight / 2) * 0.0006;
+      mouseX = (e.clientX - window.innerWidth / 2) * 0.0005;
+      mouseY = (e.clientY - window.innerHeight / 2) * 0.0005;
     };
     window.addEventListener('mousemove', handleMouseMove);
 
@@ -181,7 +185,7 @@ export default function Background3D({ robotState = 'IDLE' }) {
     const container = mountRef.current;
     if (!container || !container._threeState) return;
 
-    const hexColor = STATE_COLORS[robotState] || 0x00e5ff;
+    const hexColor = STATE_COLORS[robotState] || 0x0284c7;
     const { pMat, pointLight1 } = container._threeState;
 
     if (pMat) pMat.color.setHex(hexColor);

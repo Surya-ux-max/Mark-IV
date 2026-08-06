@@ -1,5 +1,7 @@
 /* ================================================================
-   RobotBody.css v5 — CSE Brain Interactive Drag & Pose Robot
+   RobotBody.css v7 — Bright User-Lovable Robot Theme
+   Colors: Polar White (#ffffff), Slate (#e2e8f0), Neon Cyan (#00e5ff),
+           Violet (#8b5cf6), Soft Pink (#ec4899)
    ================================================================ */
 
 .fb-root {
@@ -11,7 +13,7 @@
   padding-bottom: 25px;
   transition: opacity 0.5s ease;
   --c: #00e5ff;
-  --g: rgba(0, 229, 255, 0.5);
+  --g: rgba(0, 229, 255, 0.45);
   user-select: none;
 }
 
@@ -39,7 +41,7 @@
   transition: filter 0.3s ease;
 }
 .interactive-part:hover {
-  filter: brightness(1.18) drop-shadow(0 0 12px var(--c));
+  filter: brightness(1.05) drop-shadow(0 8px 20px rgba(2, 132, 199, 0.25));
 }
 .interactive-part:active {
   cursor: grabbing !important;
@@ -48,25 +50,28 @@
 /* Reset Pose Button */
 .reset-pose-btn {
   margin-top: 14px;
-  padding: 5px 14px;
-  font-family: 'Orbitron', monospace;
-  font-size: 9px;
+  padding: 6px 16px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
   letter-spacing: 1.5px;
-  border-radius: 12px;
-  border: 1px solid;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(8px);
+  border-radius: 20px;
+  border: 1.5px solid;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
   cursor: pointer;
   z-index: 40;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
   transition: all 0.3s ease;
 }
 .reset-pose-btn:hover {
   background: var(--c);
-  color: #000 !important;
-  box-shadow: 0 0 15px var(--c);
+  color: #ffffff !important;
+  box-shadow: 0 8px 20px rgba(2, 132, 199, 0.35);
+  transform: translateY(-2px);
 }
 
-/* Halos */
+/* Ambient Halo */
 .fb-halo {
   position: absolute;
   border-radius: 50%;
@@ -79,11 +84,10 @@
   opacity: 0;
 }
 .fb-halo.h1 { width: 340px; height: 460px; }
-.fb-halo.h2 { width: 400px; height: 520px; animation-delay: 1.8s; }
 
 @keyframes fb-halo-pulse {
   0%,100% { opacity: 0; transform: translate(-50%, -50%) scale(0.96); }
-  50%     { opacity: 0.10; transform: translate(-50%, -50%) scale(1.02); }
+  50%     { opacity: 0.12; transform: translate(-50%, -50%) scale(1.02); }
 }
 
 /* Headphone Arc Band */
@@ -94,12 +98,12 @@
   transform: translateX(-50%);
   width: 230px;
   height: 52px;
-  border: 8px solid #5533aa;
+  border: 8px solid #8b5cf6;
   border-bottom: none;
   border-radius: 120px 120px 0 0;
   z-index: 20;
   pointer-events: none;
-  box-shadow: 0 -3px 0 rgba(255,255,255,0.08), inset 0 -2px 0 rgba(0,0,0,0.5);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.25), inset 0 2px 0 rgba(255, 255, 255, 0.6);
 }
 
 /* HEAD */
@@ -168,23 +172,23 @@
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  opacity: 0.4;
+  opacity: 0.7;
 }
 .led--on { opacity: 1; animation: fb-led-blink 1.2s ease-in-out infinite; }
-@keyframes fb-led-blink { 0%,100% { opacity: 1; } 50% { opacity: 0.25; } }
+@keyframes fb-led-blink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
 
 .fb-hp-pad {
   width: 9px;
   height: 5px;
   border-radius: 3px;
-  background: #1e1440;
+  background: #7c3aed;
 }
 
-/* Head Shell */
+/* Polar White Head Shell */
 .fb-head-shell {
   width: 200px;
   height: 175px;
-  background: linear-gradient(158deg, #1c2442 0%, #131826 42%, #0d1220 78%, #090d18 100%);
+  background: linear-gradient(158deg, #ffffff 0%, #f1f5f9 50%, #e2e8f0 100%);
   border-radius: 34px;
   position: relative;
   overflow: hidden;
@@ -194,19 +198,20 @@
   padding: 12px 14px 10px;
   gap: 6px;
   transition: box-shadow 0.5s ease;
-  border: 1px solid rgba(255,255,255,0.08);
+  border: 1.5px solid #ffffff;
 }
 
 .fb-top-led {
   width: 85%;
-  height: 2px;
+  height: 2.5px;
   border-radius: 1px;
   transition: background 0.5s ease;
 }
 
+/* Glossy Dark Screen Face */
 .fb-screen {
   width: 170px;
-  background: #040609;
+  background: #090e1a;
   border-radius: 20px;
   padding: 9px 12px 7px;
   display: flex;
@@ -214,7 +219,7 @@
   align-items: center;
   gap: 6px;
   position: relative;
-  border: 1px solid rgba(0,0,0,0.95);
+  border: 1px solid rgba(0,0,0,0.9);
   flex: 1;
 }
 
@@ -250,14 +255,14 @@
 .fb-eye-socket {
   width: 70px;
   height: 52px;
-  background: #020406;
+  background: #020408;
   border-radius: 13px;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   transition: box-shadow 0.5s ease;
-  border: 1px solid rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.08);
 }
 .fb-eye-socket::after {
   content: '';
@@ -272,7 +277,7 @@
   width: 60px;
   height: 42px;
   border-radius: 9px;
-  background: #010305;
+  background: #010306;
   overflow: hidden;
   position: relative;
   display: flex;
@@ -312,7 +317,7 @@
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: rgba(255,255,255,0.92);
+  background: rgba(255,255,255,0.95);
   z-index: 3;
 }
 .fb-eye-glint-small {
@@ -322,7 +327,7 @@
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: rgba(255,255,255,0.55);
+  background: rgba(255,255,255,0.6);
   z-index: 3;
 }
 
@@ -352,7 +357,7 @@
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  opacity: 0.55;
+  opacity: 0.6;
   transition: background 0.5s ease;
 }
 
@@ -392,7 +397,7 @@
   width: 12px;
   height: 3px;
   border-radius: 1.5px;
-  background: rgba(255,255,255,0.04);
+  background: rgba(0,0,0,0.06);
 }
 
 /* NECK */
@@ -412,7 +417,7 @@
 .fb-neck-core {
   width: 28px;
   height: 8px;
-  background: #0a0e18;
+  background: #cbd5e1;
 }
 
 /* TORSO & ARMS */
@@ -424,7 +429,7 @@
 
 .fb-torso {
   width: 160px;
-  background: linear-gradient(170deg, #18213a 0%, #111828 50%, #0b111e 100%);
+  background: linear-gradient(170deg, #ffffff 0%, #f1f5f9 50%, #e2e8f0 100%);
   border-radius: 10px 10px 18px 18px;
   padding: 10px 12px 8px;
   display: flex;
@@ -432,7 +437,7 @@
   align-items: center;
   gap: 6px;
   position: relative;
-  border: 1px solid rgba(255,255,255,0.05);
+  border: 1.5px solid #ffffff;
   transition: box-shadow 0.5s ease, transform 0.2s ease;
 }
 
@@ -447,6 +452,7 @@
   height: 46px;
   border-radius: 50%;
   border: 2px solid;
+  background: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -493,8 +499,9 @@
 }
 
 .fb-torso-badge {
-  font-family: 'Orbitron', monospace;
-  font-size: 5.5px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 6px;
+  font-weight: 700;
   letter-spacing: 1.2px;
 }
 
@@ -524,16 +531,16 @@
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  border: 1px solid rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.9);
   z-index: 2;
 }
 
 .fb-arm-upper {
   width: 18px;
   height: 60px;
-  background: linear-gradient(90deg, #0c1525, #16233a, #0c1525);
+  background: linear-gradient(90deg, #f1f5f9, #ffffff, #f1f5f9);
   border-radius: 9px 9px 4px 4px;
-  border: 1px solid;
+  border: 1px solid #cbd5e1;
   margin-top: -4px;
   position: relative;
 }
@@ -551,7 +558,7 @@
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  border: 1px solid;
+  border: 1px solid #cbd5e1;
   margin: -2px 0;
   z-index: 2;
 }
@@ -559,9 +566,9 @@
 .fb-arm-lower {
   width: 16px;
   height: 42px;
-  background: linear-gradient(90deg, #090e1c, #111928, #090e1c);
+  background: linear-gradient(90deg, #e2e8f0, #ffffff, #e2e8f0);
   border-radius: 4px 4px 8px 8px;
-  border: 1px solid;
+  border: 1px solid #cbd5e1;
   margin-top: -2px;
   transition: transform 0.2s ease;
 }
@@ -570,8 +577,8 @@
   width: 18px;
   height: 6px;
   border-radius: 3px;
-  border: 1px solid;
-  background: #080c18;
+  border: 1px solid #cbd5e1;
+  background: #cbd5e1;
   margin: 0 auto;
 }
 
@@ -605,7 +612,7 @@
   width: 165px;
   height: 12px;
   border-radius: 4px;
-  border: 1px solid;
+  border: 1px solid #cbd5e1;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -641,15 +648,15 @@
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  border: 1px solid rgba(255,255,255,0.06);
+  border: 1px solid #cbd5e1;
 }
 
 .fb-leg-upper {
   width: 26px;
   height: 46px;
-  background: linear-gradient(90deg, #0c1525, #16233a, #0c1525);
+  background: linear-gradient(90deg, #f1f5f9, #ffffff, #f1f5f9);
   border-radius: 5px 5px 3px 3px;
-  border: 1px solid;
+  border: 1px solid #cbd5e1;
   position: relative;
   margin-top: -4px;
 }
@@ -667,7 +674,7 @@
   width: 20px;
   height: 12px;
   border-radius: 6px;
-  border: 1px solid;
+  border: 1px solid #cbd5e1;
   margin: -2px 0;
   z-index: 2;
 }
@@ -675,9 +682,9 @@
 .fb-leg-lower {
   width: 22px;
   height: 32px;
-  background: linear-gradient(90deg, #090e1c, #111928, #090e1c);
+  background: linear-gradient(90deg, #e2e8f0, #ffffff, #e2e8f0);
   border-radius: 2px 2px 6px 6px;
-  border: 1px solid;
+  border: 1px solid #cbd5e1;
   margin-top: -2px;
 }
 
@@ -685,11 +692,11 @@
   width: 42px;
   height: 16px;
   border-radius: 4px 4px 10px 10px;
-  border: 1px solid;
+  border: 1px solid #cbd5e1;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 3px 0 rgba(0,0,0,0.5);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
 }
 .fb-foot-led {
   width: 26px;
@@ -706,7 +713,7 @@
   height: 28px;
   border-radius: 50%;
   filter: blur(8px);
-  opacity: 0.55;
+  opacity: 0.5;
   pointer-events: none;
 }
 

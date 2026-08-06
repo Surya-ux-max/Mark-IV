@@ -1,32 +1,31 @@
 /**
- * RobotBody.jsx — CSE Brain Full-Body Robot with Interactive Drag & Double-Tap Wake/Sleep v6
+ * RobotBody.jsx — CSE Brain Bright User-Lovable Robot v7
  *
- * Interactive Features:
- * - Double-Tap / Double-Click anywhere on the robot to toggle WAKE UP / SLEEP!
- * - Drag Head to tilt / rotate head angle!
- * - Drag Left / Right Arm to articulate shoulder & elbow angles!
- * - Drag Torso to lean or sway the body!
- * - Reset Button to snap back to default stance.
+ * Bright Lovable Design Language:
+ * - Polar White & Polished Silver Shell (#ffffff → #e2e8f0)
+ * - Glossy Dark OLED Face Panel with High-Contrast Neon Cyan Eyes & Eyebrows
+ * - Lovable Lavender/Violet Headphone Ears (#8b5cf6) with Pink Accent LEDs
+ * - Interactive Dragging (Head, Arms, Torso) & Double-Tap Wake/Sleep support
  */
 
 import { useEffect, useRef, useState } from 'react';
 import './RobotBody.css';
 
-/* ── State → Theme Color ────────────────────────────────────── */
+/* ── State → Theme Palette ──────────────────────────────────── */
 const THEMES = {
-  SLEEPING:  { c: '#3a5090', g: 'rgba(58,80,144,0.45)',  dim: 0.7,  hp: '#44308a' },
-  IDLE:      { c: '#00e5ff', g: 'rgba(0,229,255,0.55)',  dim: 1.0,  hp: '#6644bb' },
-  LISTENING: { c: '#5599ff', g: 'rgba(85,153,255,0.65)', dim: 1.0,  hp: '#4455cc' },
-  THINKING:  { c: '#ffbb00', g: 'rgba(255,187,0,0.6)',   dim: 1.0,  hp: '#aa6600' },
-  SPEAKING:  { c: '#00ffaa', g: 'rgba(0,255,170,0.6)',   dim: 1.0,  hp: '#00aa66' },
-  GREETING:  { c: '#cc77ff', g: 'rgba(204,119,255,0.6)', dim: 1.0,  hp: '#8833cc' },
-  OBSERVING: { c: '#00e5ff', g: 'rgba(0,229,255,0.5)',   dim: 1.0,  hp: '#6644bb' },
-  ERROR:     { c: '#ff4455', g: 'rgba(255,68,85,0.6)',   dim: 1.0,  hp: '#aa2233' },
+  SLEEPING:  { c: '#6366f1', g: 'rgba(99,102,241,0.45)',  dim: 0.75, hp: '#7c3aed' },
+  IDLE:      { c: '#00e5ff', g: 'rgba(0,229,255,0.55)',  dim: 1.0,  hp: '#8b5cf6' },
+  LISTENING: { c: '#2563eb', g: 'rgba(37,99,235,0.6)',   dim: 1.0,  hp: '#4f46e5' },
+  THINKING:  { c: '#f59e0b', g: 'rgba(245,158,11,0.6)',   dim: 1.0,  hp: '#d97706' },
+  SPEAKING:  { c: '#10b981', g: 'rgba(16,185,129,0.6)',   dim: 1.0,  hp: '#059669' },
+  GREETING:  { c: '#ec4899', g: 'rgba(236,72,153,0.6)',   dim: 1.0,  hp: '#db2777' },
+  OBSERVING: { c: '#00e5ff', g: 'rgba(0,229,255,0.5)',   dim: 1.0,  hp: '#8b5cf6' },
+  ERROR:     { c: '#ef4444', g: 'rgba(239,68,68,0.6)',    dim: 1.0,  hp: '#dc2626' },
 };
 
 /* ── Eye expressions ────────────────────────────────────────── */
 const EYE_EXPR = {
-  normal:      { h: 1.00, pupilY: 0,   browLift: 0,   browAngle: 0,  innerGlow: 0.85 },
+  normal:      { h: 1.00, pupilY: 0,   browLift: 0,   browAngle: 0,  innerGlow: 0.90 },
   happy:       { h: 0.68, pupilY: 4,   browLift: -6,  browAngle: 6,  innerGlow: 1.00 },
   wide:        { h: 1.25, pupilY: -4,  browLift: -10, browAngle: 0,  innerGlow: 1.00 },
   excited:     { h: 1.20, pupilY: -2,  browLift: -8,  browAngle: 3,  innerGlow: 1.00 },
@@ -84,7 +83,7 @@ function Eye({ theme, expr, side, blinking }) {
           background: theme.c,
           boxShadow: `0 0 10px ${theme.c}, 0 0 22px ${theme.g}`,
           transform: `translateY(${browLift}px) rotate(${browAngle * dir}deg)`,
-          opacity: isClosed ? 0.3 : 0.9,
+          opacity: isClosed ? 0.3 : 0.95,
         }}
       />
       <div
@@ -191,15 +190,15 @@ function Headphone({ theme, side, listening }) {
       <div
         className="fb-hp-cup"
         style={{
-          background: `linear-gradient(${side === 'left' ? '135deg' : '225deg'}, #7755cc, #4433aa, #2a2060)`,
+          background: `linear-gradient(${side === 'left' ? '135deg' : '225deg'}, #a855f7, #7c3aed, #4c1d95)`,
           boxShadow: listening
-            ? `0 0 0 2px ${theme.c}70, 0 0 20px ${theme.g}, 0 5px 20px rgba(0,0,0,0.85)`
-            : `0 5px 20px rgba(0,0,0,0.85), 0 0 0 1px rgba(255,255,255,0.08)`,
+            ? `0 0 0 2.5px ${theme.c}70, 0 0 20px ${theme.g}, 0 6px 20px rgba(0,0,0,0.15)`
+            : `0 6px 20px rgba(0,0,0,0.15), 0 0 0 1px rgba(255,255,255,0.8)`,
         }}
       >
         <div className="fb-hp-grille">
-          <div className="fb-hp-ring r1" style={{ borderColor: `${theme.c}40` }} />
-          <div className="fb-hp-ring r2" style={{ borderColor: `${theme.c}25` }} />
+          <div className="fb-hp-ring r1" style={{ borderColor: `${theme.c}50` }} />
+          <div className="fb-hp-ring r2" style={{ borderColor: `${theme.c}30` }} />
           <div
             className={`fb-hp-ring r3 ${listening ? 'r3--active' : ''}`}
             style={{
@@ -226,7 +225,7 @@ export default function RobotBody({ robotState = 'IDLE', expression, emotion, an
   const isListen  = robotState === 'LISTENING';
   const isExcited = robotState === 'GREETING';
 
-  // ── Eye & Expression ───────────────────────────────────────
+  // Eye & Expression
   const eyeKey = expression?.eye_shape
     ?? (isSleep ? 'closed' : isThink ? 'look_up' : isListen ? 'wide' : isSpeak ? 'happy' : isExcited ? 'excited' : 'normal');
   const eyeExpr = EYE_EXPR[eyeKey] || EYE_EXPR.normal;
@@ -252,7 +251,7 @@ export default function RobotBody({ robotState = 'IDLE', expression, emotion, an
     ?? (isSleep ? 'sleeping' : isThink ? 'thinking' : isListen ? 'attentive' : isSpeak ? 'talk' : isExcited ? 'big_smile' : 'slight_smile');
   const mouthShape = MOUTH[mouthKey] || MOUTH.slight_smile;
 
-  // ── Drag & Interactive Pose State ───────────────────────────
+  // Drag & Interactive Pose State
   const [headRotation, setHeadRotation] = useState({ rotX: 0, rotY: 0 });
   const [torsoLean, setTorsoLean] = useState({ leanX: 0, leanY: 0 });
   const [armOffsets, setArmOffsets] = useState({
@@ -267,11 +266,8 @@ export default function RobotBody({ robotState = 'IDLE', expression, emotion, an
   const [celeb, setCeleb]   = useState(false);
   const timerRef = useRef(null);
 
-  // Active Dragging Target Tracking
-  const [dragTarget, setDragTarget] = useState(null); // 'head' | 'lArm' | 'rArm' | 'torso'
+  const [dragTarget, setDragTarget] = useState(null);
   const dragStartRef = useRef({ x: 0, y: 0 });
-
-  // Double-tap touch tracking
   const lastTapRef = useRef(0);
   const clickTimeoutRef = useRef(null);
 
@@ -300,7 +296,6 @@ export default function RobotBody({ robotState = 'IDLE', expression, emotion, an
     }
   }, [animationCue, robotState]);
 
-  // ── Drag Event Handlers ─────────────────────────────────────
   const startDrag = (target, e) => {
     e.stopPropagation();
     setDragTarget(target);
@@ -360,34 +355,26 @@ export default function RobotBody({ robotState = 'IDLE', expression, emotion, an
     };
   }, [dragTarget]);
 
-  // ── Double Tap / Double Click Toggle Handler ────────────────
   const handleRobotDoubleClick = (e) => {
     e.stopPropagation();
-    if (onDoubleTap) {
-      onDoubleTap();
-    }
+    if (onDoubleTap) onDoubleTap();
   };
 
   const handleTouchEnd = (e) => {
     const now = Date.now();
-    const DOUBLE_TAP_DELAY = 300;
-    if (now - lastTapRef.current < DOUBLE_TAP_DELAY) {
+    if (now - lastTapRef.current < 300) {
       e.preventDefault();
-      if (onDoubleTap) {
-        onDoubleTap();
-      }
+      if (onDoubleTap) onDoubleTap();
     }
     lastTapRef.current = now;
   };
 
-  // Reset Pose Function
   const handleResetPose = () => {
     setHeadRotation({ rotX: 0, rotY: 0 });
     setTorsoLean({ leanX: 0, leanY: 0 });
     setArmOffsets({ lShoulderOffset: 0, rShoulderOffset: 0, lElbowOffset: 0, rElbowOffset: 0 });
   };
 
-  // Base angles + interactive offsets
   const rShoulder = (celeb ? 142 : waving ? 86 : arms.rs) + armOffsets.rShoulderOffset;
   const lShoulder = (celeb ? 142 : arms.ls) + armOffsets.lShoulderOffset;
   const rElbow    = (waving ? 20 : celeb ? 25 : arms.re) + armOffsets.rElbowOffset;
@@ -415,14 +402,13 @@ export default function RobotBody({ robotState = 'IDLE', expression, emotion, an
       onDoubleClick={handleRobotDoubleClick}
       onTouchEnd={handleTouchEnd}
     >
-      {/* Halos */}
+      {/* Soft Ambient Light Halo */}
       <div className="fb-halo h1" />
-      <div className="fb-halo h2" />
 
       {/* Headphone Arc Band */}
       <div className="fb-band-arc" />
 
-      {/* ═══════ HEAD (DRAGGABLE & DOUBLE-TAP WAKE/SLEEP) ══════════════ */}
+      {/* HEAD */}
       <div
         className={`fb-head-unit ${isSpeak ? 'fb-head-unit--bob' : ''} interactive-part`}
         style={{
@@ -431,8 +417,7 @@ export default function RobotBody({ robotState = 'IDLE', expression, emotion, an
         }}
         onMouseDown={(e) => startDrag('head', e)}
         onTouchStart={(e) => startDrag('head', e)}
-        onClick={(e) => {
-          // Delay single click action to allow double tap
+        onClick={() => {
           clearTimeout(clickTimeoutRef.current);
           clickTimeoutRef.current = setTimeout(() => {
             setWaving(true);
@@ -443,21 +428,19 @@ export default function RobotBody({ robotState = 'IDLE', expression, emotion, an
       >
         <Headphone theme={theme} side="left" listening={isListen} />
 
-        {/* Head Shell */}
+        {/* Polar White Head Shell */}
         <div
           className="fb-head-shell"
           style={{
             boxShadow: `
-              0 0 0 1.5px rgba(255,255,255,0.08),
-              0 0 60px ${theme.g},
-              0 0 120px ${theme.g}50,
-              0 20px 50px rgba(0,0,0,0.85),
-              inset 0 2px 0 rgba(255,255,255,0.1),
-              inset 0 -2px 0 rgba(0,0,0,0.5)
+              0 16px 40px rgba(0,40,90,0.12),
+              0 0 40px ${theme.g},
+              inset 0 2px 0 #ffffff,
+              inset 0 -2px 0 rgba(0,0,0,0.06)
             `,
           }}
         >
-          <div className="fb-top-led" style={{ background: `linear-gradient(90deg, transparent, ${theme.c}60, transparent)` }} />
+          <div className="fb-top-led" style={{ background: `linear-gradient(90deg, transparent, ${theme.c}70, transparent)` }} />
 
           <div
             className="fb-screen"
@@ -495,16 +478,16 @@ export default function RobotBody({ robotState = 'IDLE', expression, emotion, an
         <Headphone theme={theme} side="right" listening={isListen} />
       </div>
 
-      {/* ═══════ NECK ══════════════════════════════════════ */}
+      {/* NECK */}
       <div className="fb-neck-wrap">
-        <div className="fb-neck-ring fb-neck-ring--top" style={{ borderColor: `${theme.c}25` }} />
+        <div className="fb-neck-ring fb-neck-ring--top" style={{ borderColor: `${theme.c}30` }} />
         <div className="fb-neck-core" />
-        <div className="fb-neck-ring fb-neck-ring--bot" style={{ borderColor: `${theme.c}25` }} />
+        <div className="fb-neck-ring fb-neck-ring--bot" style={{ borderColor: `${theme.c}30` }} />
       </div>
 
-      {/* ═══════ TORSO & ARMS (DRAGGABLE) ═════════════════ */}
+      {/* TORSO & ARMS */}
       <div className="fb-torso-row">
-        {/* LEFT ARM (DRAGGABLE) */}
+        {/* LEFT ARM */}
         <div
           className="fb-arm fb-arm--left interactive-part"
           style={{
@@ -517,34 +500,33 @@ export default function RobotBody({ robotState = 'IDLE', expression, emotion, an
           title="Drag to move left arm!"
         >
           <div className="fb-shoulder" style={{ background: theme.c, boxShadow: `0 0 12px ${theme.g}` }} />
-          <div className="fb-arm-upper" style={{ borderColor: `${theme.c}20` }}>
-            <div className="fb-arm-stripe" style={{ background: `${theme.c}40` }} />
+          <div className="fb-arm-upper" style={{ borderColor: `${theme.c}25` }}>
+            <div className="fb-arm-stripe" style={{ background: `${theme.c}50` }} />
           </div>
-          <div className="fb-elbow" style={{ borderColor: `${theme.c}45`, background: `#0a1020` }} />
+          <div className="fb-elbow" style={{ borderColor: `${theme.c}45`, background: `#cbd5e1` }} />
           <div
             className="fb-arm-lower"
-            style={{ transform: `rotate(${lElbow}deg)`, transformOrigin: 'top center', borderColor: `${theme.c}20` }}
+            style={{ transform: `rotate(${lElbow}deg)`, transformOrigin: 'top center', borderColor: `${theme.c}25` }}
           >
-            <div className="fb-wrist" style={{ borderColor: `${theme.c}30` }} />
-            <div className="fb-hand" style={{ borderColor: `${theme.c}40`, background: `${theme.c}08` }}>
+            <div className="fb-wrist" style={{ borderColor: `${theme.c}35` }} />
+            <div className="fb-hand" style={{ borderColor: `${theme.c}50`, background: `${theme.c}12` }}>
               {[...Array(4)].map((_, i) => (
-                <div key={i} className="fb-finger" style={{ background: `#0e1a2e`, borderColor: `${theme.c}30` }} />
+                <div key={i} className="fb-finger" style={{ background: `#ffffff`, borderColor: `${theme.c}40` }} />
               ))}
-              <div className="fb-thumb" style={{ background: `#0e1a2e`, borderColor: `${theme.c}30` }} />
+              <div className="fb-thumb" style={{ background: `#ffffff`, borderColor: `${theme.c}40` }} />
             </div>
           </div>
         </div>
 
-        {/* TORSO (DRAGGABLE) */}
+        {/* TORSO */}
         <div
           className="fb-torso interactive-part"
           style={{
             boxShadow: `
-              0 0 0 1px rgba(255,255,255,0.05),
-              0 8px 36px rgba(0,0,0,0.7),
-              0 0 30px ${theme.g}25,
-              inset 0 2px 0 rgba(255,255,255,0.06),
-              inset 0 -2px 0 rgba(0,0,0,0.4)
+              0 16px 40px rgba(0,40,90,0.1),
+              0 0 30px ${theme.g}20,
+              inset 0 2px 0 #ffffff,
+              inset 0 -2px 0 rgba(0,0,0,0.06)
             `,
             cursor: dragTarget === 'torso' ? 'grabbing' : 'grab',
           }}
@@ -552,13 +534,13 @@ export default function RobotBody({ robotState = 'IDLE', expression, emotion, an
           onTouchStart={(e) => startDrag('torso', e)}
           title="Drag to lean body!"
         >
-          <div className="fb-chest-top" style={{ background: `linear-gradient(90deg, transparent, ${theme.c}20, transparent)` }} />
+          <div className="fb-chest-top" style={{ background: `linear-gradient(90deg, transparent, ${theme.c}30, transparent)` }} />
 
           <div
             className="fb-chest-core"
             style={{
               borderColor: theme.c,
-              boxShadow: `0 0 20px ${theme.c}80, 0 0 50px ${theme.g}, inset 0 0 15px ${theme.c}15`,
+              boxShadow: `0 0 20px ${theme.c}80, 0 0 45px ${theme.g}, inset 0 0 15px ${theme.c}20`,
             }}
           >
             <div
@@ -577,19 +559,19 @@ export default function RobotBody({ robotState = 'IDLE', expression, emotion, an
                 className="fb-ceq"
                 style={{
                   '--bh': h,
-                  background: `linear-gradient(180deg, ${theme.c}, ${theme.c}66)`,
+                  background: `linear-gradient(180deg, ${theme.c}, ${theme.c}77)`,
                   animationDelay: `${i * 0.06}s`,
                 }}
               />
             ))}
           </div>
 
-          <div className="fb-torso-badge" style={{ color: `${theme.c}44` }}>
+          <div className="fb-torso-badge" style={{ color: `#64748b` }}>
             CSE·BRAIN·MK4
           </div>
         </div>
 
-        {/* RIGHT ARM (DRAGGABLE & WAVE CLICKABLE) */}
+        {/* RIGHT ARM */}
         <div
           className={`fb-arm fb-arm--right ${waving ? 'fb-arm--wave' : ''} ${celeb ? 'fb-arm--celeb' : ''} interactive-part`}
           style={{
@@ -602,65 +584,65 @@ export default function RobotBody({ robotState = 'IDLE', expression, emotion, an
           title="Drag to move right arm!"
         >
           <div className="fb-shoulder" style={{ background: theme.c, boxShadow: `0 0 12px ${theme.g}` }} />
-          <div className="fb-arm-upper" style={{ borderColor: `${theme.c}20` }}>
-            <div className="fb-arm-stripe" style={{ background: `${theme.c}40` }} />
+          <div className="fb-arm-upper" style={{ borderColor: `${theme.c}25` }}>
+            <div className="fb-arm-stripe" style={{ background: `${theme.c}50` }} />
           </div>
-          <div className="fb-elbow" style={{ borderColor: `${theme.c}45`, background: `#0a1020` }} />
+          <div className="fb-elbow" style={{ borderColor: `${theme.c}45`, background: `#cbd5e1` }} />
           <div
             className="fb-arm-lower"
-            style={{ transform: `rotate(${-rElbow}deg)`, transformOrigin: 'top center', borderColor: `${theme.c}20` }}
+            style={{ transform: `rotate(${-rElbow}deg)`, transformOrigin: 'top center', borderColor: `${theme.c}25` }}
           >
-            <div className="fb-wrist" style={{ borderColor: `${theme.c}30` }} />
-            <div className="fb-hand" style={{ borderColor: `${theme.c}40`, background: `${theme.c}08` }}>
+            <div className="fb-wrist" style={{ borderColor: `${theme.c}35` }} />
+            <div className="fb-hand" style={{ borderColor: `${theme.c}50`, background: `${theme.c}12` }}>
               {[...Array(4)].map((_, i) => (
-                <div key={i} className="fb-finger" style={{ background: `#0e1a2e`, borderColor: `${theme.c}30` }} />
+                <div key={i} className="fb-finger" style={{ background: `#ffffff`, borderColor: `${theme.c}40` }} />
               ))}
-              <div className="fb-thumb" style={{ background: `#0e1a2e`, borderColor: `${theme.c}30` }} />
+              <div className="fb-thumb" style={{ background: `#ffffff`, borderColor: `${theme.c}40` }} />
             </div>
           </div>
         </div>
       </div>
 
-      {/* ═══════ HIP CONNECTOR ═════════════════════════════ */}
-      <div className="fb-hip-bar" style={{ borderColor: `${theme.c}20`, background: `#0a1020` }}>
+      {/* HIP CONNECTOR */}
+      <div className="fb-hip-bar" style={{ borderColor: `${theme.c}30`, background: `#e2e8f0` }}>
         <div className="fb-hip-leds">
           {[...Array(5)].map((_, i) => (
-            <div key={i} className="fb-hled" style={{ background: `${theme.c}${isSleep ? '20' : '55'}` }} />
+            <div key={i} className="fb-hled" style={{ background: `${theme.c}${isSleep ? '30' : '75'}` }} />
           ))}
         </div>
       </div>
 
-      {/* ═══════ LEGS & FEET ═══════════════════════════════ */}
+      {/* LEGS & FEET */}
       <div className="fb-legs-row">
         <div className={`fb-leg ${isSpeak || isExcited ? 'fb-leg--bounce' : ''}`}>
           <div className="fb-leg-hip" style={{ background: theme.c, boxShadow: `0 0 8px ${theme.g}` }} />
-          <div className="fb-leg-upper" style={{ borderColor: `${theme.c}20` }}>
-            <div className="fb-leg-stripe" style={{ background: `${theme.c}40` }} />
+          <div className="fb-leg-upper" style={{ borderColor: `${theme.c}25` }}>
+            <div className="fb-leg-stripe" style={{ background: `${theme.c}50` }} />
           </div>
-          <div className="fb-knee" style={{ borderColor: `${theme.c}35`, background: `#0a1020` }} />
-          <div className="fb-leg-lower" style={{ borderColor: `${theme.c}15` }} />
-          <div className="fb-foot" style={{ borderColor: `${theme.c}35`, background: `${theme.c}06` }}>
+          <div className="fb-knee" style={{ borderColor: `${theme.c}40`, background: `#cbd5e1` }} />
+          <div className="fb-leg-lower" style={{ borderColor: `${theme.c}20` }} />
+          <div className="fb-foot" style={{ borderColor: `${theme.c}45`, background: `#ffffff` }}>
             <div className="fb-foot-led" style={{ background: theme.c, boxShadow: `0 0 10px ${theme.c}` }} />
           </div>
         </div>
 
         <div className={`fb-leg ${isSpeak || isExcited ? 'fb-leg--bounce fb-leg--bounce-r' : ''}`}>
           <div className="fb-leg-hip" style={{ background: theme.c, boxShadow: `0 0 8px ${theme.g}` }} />
-          <div className="fb-leg-upper" style={{ borderColor: `${theme.c}20` }}>
-            <div className="fb-leg-stripe" style={{ background: `${theme.c}40` }} />
+          <div className="fb-leg-upper" style={{ borderColor: `${theme.c}25` }}>
+            <div className="fb-leg-stripe" style={{ background: `${theme.c}50` }} />
           </div>
-          <div className="fb-knee" style={{ borderColor: `${theme.c}35`, background: `#0a1020` }} />
-          <div className="fb-leg-lower" style={{ borderColor: `${theme.c}15` }} />
-          <div className="fb-foot" style={{ borderColor: `${theme.c}35`, background: `${theme.c}06` }}>
+          <div className="fb-knee" style={{ borderColor: `${theme.c}35`, background: `#cbd5e1` }} />
+          <div className="fb-leg-lower" style={{ borderColor: `${theme.c}20` }} />
+          <div className="fb-foot" style={{ borderColor: `${theme.c}45`, background: `#ffffff` }}>
             <div className="fb-foot-led" style={{ background: theme.c, boxShadow: `0 0 10px ${theme.c}` }} />
           </div>
         </div>
       </div>
 
-      {/* ═══════ GROUND GLOW ═══════════════════════════════ */}
+      {/* GROUND GLOW */}
       <div className="fb-ground-glow" style={{ background: `radial-gradient(ellipse 80% 45%, ${theme.g} 0%, transparent 70%)` }} />
 
-      {/* Reset Pose Button when user has moved parts */}
+      {/* Reset Pose Button */}
       {isCustomPosed && (
         <button
           className="reset-pose-btn"
