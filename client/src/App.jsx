@@ -1,5 +1,11 @@
 /**
  * App.jsx — Full-Body Layout for SurveX Virtual Robot (CSE Brain)
+ *
+ * Features:
+ * - Double-Tap anywhere on the robot to toggle Wake Up / Sleep!
+ * - Dedicated Wake Up / Sleep Button.
+ * - Voice STT / TTS Integration.
+ * - 3D Background with Mouse Parallax.
  */
 
 import { useCallback, useEffect } from 'react';
@@ -118,13 +124,14 @@ export default function App() {
           {label}
         </div>
 
-        {/* Full-Body Robot Stage */}
+        {/* Full-Body Robot Stage with Double-Tap Support */}
         <div className="robot-stage">
           <RobotBody
             robotState={robot.robotState}
             expression={robot.expression}
             emotion={robot.emotion}
             animationCue={robot.animationCue}
+            onDoubleTap={handleWakeToggle}
           />
         </div>
 
@@ -179,8 +186,8 @@ export default function App() {
               : robot.isAwake
               ? speech.isListening
                 ? '● LISTENING — SPEAK NOW'
-                : '● TAP MIC OR SPEAK TO TALK'
-              : '● TAP WAKE UP TO START'}
+                : '● DOUBLE-TAP ROBOT OR TAP MIC TO TALK'
+              : '● DOUBLE-TAP ROBOT OR PRESS WAKE UP'}
           </div>
         </div>
 

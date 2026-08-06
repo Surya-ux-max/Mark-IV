@@ -1,11 +1,11 @@
 /**
- * RobotBody.jsx — CSE Brain Full-Body Robot with Interactive Drag & Pose Controls v5
+ * RobotBody.jsx — CSE Brain Full-Body Robot with Interactive Drag & Double-Tap Wake/Sleep v6
  *
  * Interactive Features:
+ * - Double-Tap / Double-Click anywhere on the robot to toggle WAKE UP / SLEEP!
  * - Drag Head to tilt / rotate head angle!
  * - Drag Left / Right Arm to articulate shoulder & elbow angles!
  * - Drag Torso to lean or sway the body!
- * - Click Parts to trigger gestures (Wave right hand, Celebrate left hand, Wink head)!
  * - Reset Button to snap back to default stance.
  */
 
@@ -218,7 +218,7 @@ function Headphone({ theme, side, listening }) {
   );
 }
 
-export default function RobotBody({ robotState = 'IDLE', expression, emotion, animationCue }) {
+export default function RobotBody({ robotState = 'IDLE', expression, emotion, animationCue, onDoubleTap }) {
   const theme     = THEMES[robotState] || THEMES.IDLE;
   const isSleep   = robotState === 'SLEEPING';
   const isSpeak   = robotState === 'SPEAKING' || robotState === 'GREETING';
@@ -270,6 +270,10 @@ export default function RobotBody({ robotState = 'IDLE', expression, emotion, an
   // Active Dragging Target Tracking
   const [dragTarget, setDragTarget] = useState(null); // 'head' | 'lArm' | 'rArm' | 'torso'
   const dragStartRef = useRef({ x: 0, y: 0 });
+
+  // Double-tap touch tracking
+  const lastTapRef = useRef(0);
+  const clickTimeoutRef = useRef(null);
 
   useEffect(() => {
     setArms(DEFAULT_ARM_POSE[robotState] || DEFAULT_ARM_POSE.IDLE);
@@ -356,6 +360,26 @@ export default function RobotBody({ robotState = 'IDLE', expression, emotion, an
     };
   }, [dragTarget]);
 
+  // ── Double Tap / Double Click Toggle Handler ────────────────
+  const handleRobotDoubleClick = (e) => {
+    e.stopPropagation();
+    if (onDoubleTap) {
+      onDoubleTap();
+    }
+  };
+
+  const handleTouchEnd = (e) => {
+    const now = Date.now();
+    const DOUBLE_TAP_DELAY = 300;
+    if (now - lastTapRef.current < DOUBLE_TAP_DELAY) {
+      e.preventDefault();
+      if (onDoubleTap) {
+        onDoubleTap();
+      }
+    }
+    lastTapRef.current = now;
+  };
+
   // Reset Pose Function
   const handleResetPose = () => {
     setHeadRotation({ rotX: 0, rotY: 0 });
@@ -388,6 +412,8 @@ export default function RobotBody({ robotState = 'IDLE', expression, emotion, an
         opacity: theme.dim,
         transform: `rotate(${torsoLean.leanX * 0.5}deg) translateY(${torsoLean.leanY}px)`,
       }}
+      onDoubleClick={handleRobotDoubleClick}
+      onTouchEnd={handleTouchEnd}
     >
       {/* Halos */}
       <div className="fb-halo h1" />
@@ -396,7 +422,7 @@ export default function RobotBody({ robotState = 'IDLE', expression, emotion, an
       {/* Headphone Arc Band */}
       <div className="fb-band-arc" />
 
-      {/* ═══════ HEAD (DRAGGABLE & CLICKABLE) ══════════════ */}
+      {/* ═══════ HEAD (DRAGGABLE & DOUBLE-TAP WAKE/SLEEP) ══════════════ */}
       <div
         className={`fb-head-unit ${isSpeak ? 'fb-head-unit--bob' : ''} interactive-part`}
         style={{
@@ -405,11 +431,15 @@ export default function RobotBody({ robotState = 'IDLE', expression, emotion, an
         }}
         onMouseDown={(e) => startDrag('head', e)}
         onTouchStart={(e) => startDrag('head', e)}
-        onClick={() => {
-          setWaving(true);
-          setTimeout(() => setWaving(false), 2000);
+        onClick={(e) => {
+          // Delay single click action to allow double tap
+          clearTimeout(clickTimeoutRef.current);
+          clickTimeoutRef.current = setTimeout(() => {
+            setWaving(true);
+            setTimeout(() => setWaving(false), 2000);
+          }, 250);
         }}
-        title="Drag to tilt head, click to wave!"
+        title="Double-tap to Wake/Sleep! Drag to tilt head."
       >
         <Headphone theme={theme} side="left" listening={isListen} />
 
@@ -569,7 +599,7 @@ export default function RobotBody({ robotState = 'IDLE', expression, emotion, an
           }}
           onMouseDown={(e) => startDrag('rArm', e)}
           onTouchStart={(e) => startDrag('rArm', e)}
-          title="Drag to move right arm, click to wave!"
+          title="Drag to move right arm!"
         >
           <div className="fb-shoulder" style={{ background: theme.c, boxShadow: `0 0 12px ${theme.g}` }} />
           <div className="fb-arm-upper" style={{ borderColor: `${theme.c}20` }}>
